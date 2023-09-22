@@ -65,7 +65,7 @@ def main():
     policy_net = PolicyNet()
     
 #ToDo 1
-    optimizer = 
+    optimizer = torch.optim.SGD(policy_net.parameters(), lr=learning_rate)
 
     # Batch History
     state_pool = []
@@ -89,9 +89,9 @@ def main():
 
         for t in count():
 #ToDo 2
-            probs = 
-            m = 
-            action = 
+            probs = policy_net(state)
+            m = Bernoulli(probs)
+            action = m.sample()
 
             action = action.data.numpy().astype(int)[0]
             next_state, reward, done, _ = env.step(action)
@@ -142,7 +142,7 @@ def main():
                     running_add = 0
                 else:
 #ToDo 3
-                    running_add = 
+                    running_add += gamma * reward_pool[i]
                     reward_pool[i] = running_add
 
             # Normalize reward
