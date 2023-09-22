@@ -83,13 +83,128 @@ $p(s)$ indicates the state marginal of $\pi$ across time steps, unless indicated
             &= \epsilon * R_{max} * \left(\frac{T^2}{2} + \frac{T}{2} \right)\\
             &\in \mathcal{O}(T^2 \epsilon)    
         \end{align*}
-
-        
-
     \end{enumerate}
-
-
     
 \end{enumerate}
+
+\problem{2}
+
+Run behavioral cloning (BC) and report results on two tasks: the Ant environment, where
+a behavioral cloning agent should achieve at least 30\% of the performance of the expert, and
+one environment of your choosing where it does not.
+\soln
+
+Figure \ref{fig:ant} show the results on the ant environment with default hyperparameters.
+2 layers, of 64 nodes, 0.005 lr. Batch size = 1000. Metrics were computed over 5 rollouts.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{09-22-ant_mean}
+        \caption{Mean Returns}
+        \label{fig:ant_mean}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{09-22-ant_std}
+        \caption{Std of Returns}
+        \label{fig:ant_std}
+    \end{subfigure}
+    \caption{Ant environment with 5 repeats (eval batch size = 5000, batch size = 1000). Blue is expert, grey is BC.}
+    \label{fig:ant}
+\end{figure}
+
+Figure \ref{fig:hop} show the results on the hopper environment with default hyperparameters.
+We see much worse performance here, indicating that the BC agent did not work as well.
+This could be because the environment is much more challenging, and possibly a larger network would be needed.
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{09-22-hop_mean}
+        \caption{Mean Returns}
+        \label{fig:hop_mean}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{09-22-hop_std}
+        \caption{Std of Returns}
+        \label{fig:hop_std}
+    \end{subfigure}
+    \caption{Hopper environment with 5 repeats (eval batch size = 5000, batch size = 1000). Yellow is expert, Pink is BC.}
+    \label{fig:hop}
+\end{figure}
+
+We try double the network depth in case the network is not large enough to capture the function, 
+and 5 times the batch size in order to give it more training data, and see the results in Figure \ref{fig:hop2}.
+They did not improve the performance, and in fact made it worse.
+
+\begin{figure}[h] 
+    \centering
+    \includegraphics[width=0.55 \linewidth]{09-22-hop_all}
+    \caption{Different networks on hopper. This is the mean returns}
+    \label{fig:hop2}
+\end{figure}
+
+\problem{3}
+Run DAgger and report results on the two tasks you tested previously with behavioral cloning
+(i.e., Ant + another environment). 
+
+\soln
+
+Figure \ref{fig:ant_dag} show the results on the ant environment with default hyperparameters.
+2 layers, of 64 nodes, 0.005 lr. Batch size = 1000, and 10 dagger iterations. Metrics were computed over 5 rollouts.
+
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{09-22-dag_ant_mean}
+        \caption{Mean Returns}
+        \label{fig:ant_mean}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{09-22-dag_ant_std}
+        \caption{Std of Returns}
+        \label{fig:ant_std}
+    \end{subfigure}
+    \caption{Ant environment with 5 repeats (eval batch size = 5000, batch size = 1000). Blue is expert, grey is BC, orange is DAgger.}
+    \label{fig:ant_dag}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{09-22-dag_hop_mean}
+        \caption{Mean Returns}
+        \label{fig:hop_mean}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{09-22-dag_hop_std}
+        \caption{Std of Returns}
+        \label{fig:hop_std}
+    \end{subfigure}
+    \caption{hop environment with 5 repeats (eval batch size = 5000, batch size = 1000). Yellow is expert, Pink is BC, Red is DAgger.}
+    \label{fig:hop_dag}
+\end{figure}
+
+We also tried doubling the network depth. And the average returns can be seen in Figure \ref{fig:hop_dag2}.
+Once again, the larger network does not seem to do any better.
+
+\begin{figure}[h] 
+    \centering
+    \includegraphics[width=0.55 \linewidth]{09-22-dag_hop_all}
+    \caption{Comparison of dagger with defaout network size (grey) and double network depth (blue) in average return.}
+    \label{fig:hop_dag2}
+\end{figure}
 
 \end{document}
