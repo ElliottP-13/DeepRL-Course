@@ -80,8 +80,16 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         else:
             observation = obs[None]
 
-        # TODO return the action that the policy prescribes
-        raise NotImplementedError
+        inp = torch.Tensor(observation, device=ptu.device)  # make tensor
+        if self.discrete:
+            outp = self.logits_na(inp)
+            distrib = distributions.Categorical(outp)
+        else:
+            outp_m = self.mean_net(inp)
+            outp_std = self.logstd
+            distrib = distributions.Normal(outp_m, torch.exp(outp_std))
+
+        return distrib.sample()
 
     # update/train this policy
     def update(self, observations, actions, **kwargs):
@@ -108,8 +116,28 @@ class MLPPolicySL(MLPPolicy):
             self, observations, actions,
             adv_n=None, acs_labels_na=None, qvals=None
     ):
-        # TODO: update the policy and return the loss
-        loss = TODO
+        # Define a loss function (e.g., Mean Squared Error) and an optimizer (e.g., Adam)
+        optimizer = self.optimizer
+
+        # Zero the gradients
+        optimizer.zero_grad()
+
+        # Forward pass
+        outputs = self.get_action(observations)
+        target = torch.Tensor(actions, device=ptu.device)
+
+        # Compute the loss
+        loss = self.loss(outputs, target)
+
+        # Backpropagation
+        loss.backward()
+
+        # Update the weights
+        optimizer.step()
+
+        # Print or log the loss for this batch if needed
+        print(f"Batch Loss: {loss.item()}")
+
         return {
             # You can add extra logging information here, but keep this line
             'Training Loss': ptu.to_numpy(loss),

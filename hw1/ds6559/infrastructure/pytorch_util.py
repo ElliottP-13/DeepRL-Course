@@ -3,6 +3,8 @@ from typing import Union
 import torch
 from torch import nn
 
+from ds6559.policies.MLP_policy import MLPPolicySL
+
 Activation = Union[str, nn.Module]
 
 
@@ -45,9 +47,24 @@ def build_mlp(
     if isinstance(output_activation, str):
         output_activation = _str_to_activation[output_activation]
 
-    # TODO: return a MLP. This should be an instance of nn.Module
-    # Note: nn.Sequential is an instance of nn.Module.
-    raise NotImplementedError5
+    # Input layer
+    layers = [nn.Linear(input_size, size)]
+    if activation is not None:
+        layers.append(activation())
+
+    # Hidden layers
+    for _ in range(n_layers):
+        layers.append(nn.Linear(size, size))
+        if activation is not None:
+            layers.append(activation())
+
+    # Output layer
+    layers.append(nn.Linear(size, output_size))
+    if output_activation is not None:
+        layers.append(output_activation())
+
+    # Define the sequential neural network
+    return nn.Sequential(*layers)
 
 
 device = None
