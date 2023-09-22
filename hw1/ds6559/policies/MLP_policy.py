@@ -89,7 +89,7 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
             outp_std = self.logstd
             distrib = distributions.Normal(outp_m, torch.exp(outp_std))
 
-        return distrib.sample()
+        return distrib.rsample()
 
     # update/train this policy
     def update(self, observations, actions, **kwargs):

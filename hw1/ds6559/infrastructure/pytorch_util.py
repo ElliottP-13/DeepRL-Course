@@ -50,18 +50,18 @@ def build_mlp(
     # Input layer
     layers = [nn.Linear(input_size, size)]
     if activation is not None:
-        layers.append(activation())
+        layers.append(activation)
 
     # Hidden layers
     for _ in range(n_layers):
         layers.append(nn.Linear(size, size))
         if activation is not None:
-            layers.append(activation())
+            layers.append(activation)
 
     # Output layer
     layers.append(nn.Linear(size, output_size))
     if output_activation is not None:
-        layers.append(output_activation())
+        layers.append(output_activation)
 
     # Define the sequential neural network
     return nn.Sequential(*layers)
