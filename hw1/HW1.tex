@@ -1,0 +1,95 @@
+\documentclass[11pt]{article}
+\usepackage{../EllioStyle}
+\usepackage{listings}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\graphicspath{ {imgs/} }
+
+\title{Homework 1}
+\author{Elliott Pryor}
+\date{30 September 2023}
+
+\rhead{Homework 1}
+
+\begin{document}
+\maketitle
+
+\problem{1}
+
+Consider the problem of imitation learning within a discrete MDP with horizon $T$ and an expert
+policy $\pi^*$. We gather expert demonstrations from $\pi^*$ and fit an imitation policy $\pi_\theta$ to these
+trajectories so that
+
+\begin{equation}
+    \mathbb{E}_{p_{\pi^*}(s)} \pi_\theta(a \neq \pi^*(s)) = \frac{1}{T} \sum^{T}_{t=1} \mathbb{E}_{p_{\pi^*}(s_t)} \pi_\theta(a \neq \pi^*(s_t)) \leq \epsilon
+\end{equation}
+i.e., the expected likelihood that the learned policy $\pi_\theta$ disagrees with the expert $\pi^*$ within the
+training distribution $p_{\pi^*}$ of states drawn from random expert trajectories is at most $\epsilon$.
+For convenience, the notation $p_\pi (s_t)$ indicates the state distribution under $\pi$ at time step $t$ while
+$p(s)$ indicates the state marginal of $\pi$ across time steps, unless indicated otherwise
+
+\begin{enumerate}
+    \item Show that $\sum_{s_t} \left| p_{\pi_\theta}(st) - p_{\pi^*}(st) \right| \leq 2T\epsilon$
+    \item Consider the expected return of the learned policy $\pi_\theta$ for a state-dependent reward function $r(s_t)$.
+    where we assume the reward is bounded $|r(s_t)| \leq R_{max}$:
+    $$
+    J(\pi) = \sum_{t=1}^T \mathbb{E}_{p_\pi(s_t)} r(s_t)
+    $$
+        \begin{enumerate}
+            \item Show that $|J(\pi_\theta) - J(\pi^*)| \in \mathcal{O}(T\epsilon)$ when the reward only depends on the last state.
+            I.e., $r(s_t) = 0$ $\forall t<T$
+            \item Show that $J(\pi*) - J(\pi_\theta) \in \mathcal{O}(T^2 \epsilon)$
+        \end{enumerate}
+\end{enumerate}
+
+\soln
+
+\begin{enumerate}
+    \item So we want to show that $\sum_{s_t} \left| p_{\pi_\theta}(st) - p_{\pi^*}(st) \right| \leq 2T\epsilon$.
+    We know that $\mathbb{E}_{p_{\pi^*}(s)} \pi_\theta(a \neq \pi^*(s)) = \frac{1}{T} \sum^{T}_{t=1} \mathbb{E}_{p_{\pi^*}(s_t)} \pi_\theta(a \neq \pi^*(s_t)) \leq \epsilon$.
+    This means that the expected value of the probability that $\pi_\theta$ disagrees with $\pi^*$ is at most $\epsilon$.
+    
+    We note that if there is no mistake, then there is no difference in the state distribution. 
+    In the worst case, after a mistake the state distribution is completely different, so $\left| p_{\pi_\theta}(st) - p_{\pi^*}(st) \right| = 2 \; \forall t>t_{mistake}$.
+    Thus the cost after the mistake would be: $2(T - t_{mistake})$.
+    We partition the space by the time of the mistake:
+    $\epsilon * cost_1 , (1-\epsilon)\epsilon * cost_2 , (1-\epsilon)^2\epsilon *cost_3 , \dots , (1 - \epsilon)^T * 0$.
+    Where cost is the total difference in the state distribution after the mistake.
+    So all the possible costs that we can incur are: $\epsilon * 2T , (1-\epsilon)\epsilon * 2(T-1) , (1-\epsilon)^2\epsilon *2(T-2) , \dots , (1 - \epsilon)^T * 0$.
+    So the worst case is we make a mistake on the very first sample.
+    Thus $\sum_{s_t} \left| p_{\pi_\theta}(st) - p_{\pi^*}(st) \right| \leq 2T\epsilon$
+
+    \item \begin{enumerate}
+        \item We want to show that $|J(\pi_\theta) - J(\pi^*)| \in \mathcal{O}(T\epsilon)$ when the reward only depends on the last state.
+        This bound is somewhat misleading as it appears to grow linearly, but in fact is constant. 
+        This is because the reward only depends on the last state, so $|J(\pi_\theta) - J(\pi^*)| = |\mathbb{E}_{p_{\pi^*}(s_T)}(r(s_T)) - \mathbb{E}_{p_{\pi_\theta}(s_T)}(r(s_T))|$.
+        We know that $r(s)$ is a bounded function, so this is clearly $\leq R_{max}$ which is constant.
+
+        We can also derive the original (linear) bound fairly easily. We partition it into the case of no mistakes and the case of mistakes.
+        No mistake occurs with probability $(1-\epsilon)^T$ which by Bernoulli's inequality is $\geq 1 - T\epsilon$.
+        This means the probability of a mistake is $\leq 1 - (1 - T\epsilon) = T\epsilon$. We can assume worst case cost if a mistake occurs.
+        Thus the expected value of the cost $\leq (1 - T \epsilon) *0 + (T\epsilon)*R_{max} \in \mathcal{T\epsilon}$
+
+        \item Given the previous result, we consider the generic case where the reward depends on all states, as a sum of cases where the reward only depends on the last state.
+        Let $j(T)$ denote the cost discovered in the previous section $j(t) = t \epsilon * R_{max}$.  Then the generic case:
+        \begin{align*}
+            |J(\pi*) - J(\pi_\theta)| &\leq j(1) + j(2) + \dots + j(T)\\
+            &= \epsilon * R_{max} * (1 + 2 + \dots + T)\\
+            &= \epsilon * R_{max} * \frac{T(T+1)}{2}\\
+            &= \epsilon * R_{max} * \left(\frac{T^2}{2} + \frac{T}{2} \right)\\
+            &\in \mathcal{O}(T^2 \epsilon)    
+        \end{align*}
+
+        
+
+    \end{enumerate}
+
+
+    
+\end{enumerate}
+
+\end{document}
