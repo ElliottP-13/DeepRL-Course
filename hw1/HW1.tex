@@ -95,7 +95,7 @@ one environment of your choosing where it does not.
 \soln
 
 Figure \ref{fig:ant} show the results on the ant environment with default hyperparameters.
-2 layers, of 64 nodes, 0.005 lr. Batch size = 1000. Metrics were computed over 5 rollouts.
+2 layers, of 64 nodes, 0.005 lr, batch size = 1000, train steps = 1000. Metrics were computed over 5 rollouts (Eval batch size = 5000, ep len = 1000).
 
 \begin{figure}[h]
     \centering
@@ -139,14 +139,23 @@ This could be because the environment is much more challenging, and possibly a l
 \end{figure}
 
 We try double the network depth in case the network is not large enough to capture the function, 
-and 5 times the batch size in order to give it more training data, and see the results in Figure \ref{fig:hop2}.
+and 5 times the batch size in order to give it more training data (we also proportionally increase the training iterations), and see the results in Figure \ref{fig:hop2}.
 They did not improve the performance, and in fact made it worse.
 
 \begin{figure}[h] 
     \centering
-    \includegraphics[width=0.55 \linewidth]{09-22-hop_all}
+    \includegraphics[width=0.55 \linewidth]{09-25-hop_all}
     \caption{Different networks on hopper. This is the mean returns}
     \label{fig:hop2}
+\end{figure}
+
+Based on this, we vary batch size more. 
+The results can be seen in figure \ref{fig:hop_batch}, the effect is not very significant, and we do not recover 30\% of the expert performance.
+\begin{figure}[h!] 
+    \centering
+    \includegraphics[width=0.55 \linewidth]{09-25-hop_batch}
+    \caption{Variation of batch size and training iterations (batch = train) on hopper. This is the mean returns.}
+    \label{fig:hop_batch}
 \end{figure}
 
 \problem{3}

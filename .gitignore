@@ -97,6 +97,7 @@ docs/
 po/*~
 
 **/__pycache__/
+**/.pycache/
 
 **/data/
 hw1/ds6559.egg-info/
