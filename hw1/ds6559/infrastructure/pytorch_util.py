@@ -28,7 +28,6 @@ def build_mlp(
         output_activation: Activation = 'identity',
 ) -> nn.Module:
     print("Build MLP")
-    input()
     """
         Builds a feedforward neural network
 
