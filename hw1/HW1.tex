@@ -18,6 +18,10 @@
 \begin{document}
 \maketitle
 
+My work can be found on my github:
+\href{https://github.com/ElliottP-13/DeepRL-Course/tree/main/hw1}{https://github.com/ElliottP-13/DeepRL-Course}.
+
+
 \problem{1}
 
 Consider the problem of imitation learning within a discrete MDP with horizon $T$ and an expert
@@ -185,6 +189,16 @@ Figure \ref{fig:ant_dag} show the results on the ant environment with default hy
     \end{subfigure}
     \caption{Ant environment with 5 repeats (eval batch size = 5000, batch size = 1000). Blue is expert, grey is BC, orange is DAgger.}
     \label{fig:ant_dag}
+\end{figure}
+
+This result is confusing because it doesn't seem to improve over time.
+However, the training loss does decrease (see Figure \ref{fig:loss}), so we are successfully learning more, but this does not help us during eval. 
+
+\begin{figure}[h] 
+    \centering
+    \includegraphics[width=0.55 \linewidth]{09-29-loss}
+    \caption{Training loss of Dagger over time}
+    \label{fig:loss}
 \end{figure}
 
 \begin{figure}[h]
