@@ -3,8 +3,6 @@ from typing import Union
 import torch
 from torch import nn
 
-from ds6559.policies.MLP_policy import MLPPolicySL
-
 Activation = Union[str, nn.Module]
 
 
@@ -26,12 +24,14 @@ def build_mlp(
         size: int,
         activation: Activation = 'tanh',
         output_activation: Activation = 'identity',
-) -> nn.Module:
-    print("Build MLP")
+):
     """
         Builds a feedforward neural network
 
         arguments:
+            input_placeholder: placeholder variable for the state (batch_size, input_size)
+            scope: variable scope of the network
+
             n_layers: number of hidden layers
             size: dimension of each hidden layer
             activation: activation of each hidden layer
@@ -41,30 +41,20 @@ def build_mlp(
             output_activation: activation of the output layer
 
         returns:
-            MLP (nn.Module)
+            output_placeholder: the result of a forward pass through the hidden layers + the output layer
     """
     if isinstance(activation, str):
         activation = _str_to_activation[activation]
     if isinstance(output_activation, str):
         output_activation = _str_to_activation[output_activation]
-
-    # Input layer
-    layers = [nn.Linear(input_size, size)]
-    if activation is not None:
-        layers.append(activation)
-
-    # Hidden layers
+    layers = []
+    in_size = input_size
     for _ in range(n_layers):
-        layers.append(nn.Linear(size, size))
-        if activation is not None:
-            layers.append(activation)
-
-    # Output layer
-    layers.append(nn.Linear(size, output_size))
-    if output_activation is not None:
-        layers.append(output_activation)
-
-    # Define the sequential neural network
+        layers.append(nn.Linear(in_size, size))
+        layers.append(activation)
+        in_size = size
+    layers.append(nn.Linear(in_size, output_size))
+    layers.append(output_activation)
     return nn.Sequential(*layers)
 
 

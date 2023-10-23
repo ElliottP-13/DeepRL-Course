@@ -98,6 +98,6 @@ po/*~
 
 **/__pycache__/
 **/.pycache/
-
-**/data/
+**/.ipynb_checkpoints/
+**/data*/
 hw1/ds6559.egg-info/
