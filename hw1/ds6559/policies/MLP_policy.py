@@ -86,7 +86,21 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
 
     # query the policy with observation(s) to get selected action(s)
     def get_action(self, obs: np.ndarray) -> np.ndarray:
-        # TODO: get this from HW1
+        if len(obs.shape) > 1:
+            observation = obs
+        else:
+            observation = obs[None]
+
+        inp = torch.Tensor(observation, device=ptu.device)  # make tensor
+        if self.discrete:
+            outp = self.logits_na(inp)
+            distrib = distributions.Categorical(outp)
+        else:
+            outp_m = self.mean_net(inp)
+            outp_std = self.logstd
+            distrib = distributions.Normal(outp_m, torch.exp(outp_std))
+
+        return distrib.rsample()
 
     # update/train this policy
     def update(self, observations, actions, **kwargs):
