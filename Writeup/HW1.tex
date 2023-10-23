@@ -176,14 +176,14 @@ Figure \ref{fig:ant_dag} show the results on the ant environment with default hy
     \centering
     \begin{subfigure}[b]{0.47\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{09-29-dag_ant_mean}
+        \includegraphics[width=\textwidth]{09-22-dag_ant_mean}
         \caption{Mean Returns}
         \label{fig:ant_mean}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.47\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{09-29-dag_ant_std}
+        \includegraphics[width=\textwidth]{09-22-dag_ant_std}
         \caption{Std of Returns}
         \label{fig:ant_std}
     \end{subfigure}
@@ -191,18 +191,28 @@ Figure \ref{fig:ant_dag} show the results on the ant environment with default hy
     \label{fig:ant_dag}
 \end{figure}
 
+This result is confusing because it doesn't seem to improve over time.
+However, the training loss does decrease (see Figure \ref{fig:loss}), so we are successfully learning more, but this does not help us during eval. 
+
+\begin{figure}[h] 
+    \centering
+    \includegraphics[width=0.55 \linewidth]{09-29-loss}
+    \caption{Training loss of Dagger over time}
+    \label{fig:loss}
+\end{figure}
+
 \begin{figure}[h]
     \centering
     \begin{subfigure}[b]{0.47\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{09-29-dag_hop_mean}
+        \includegraphics[width=\textwidth]{09-22-dag_hop_mean}
         \caption{Mean Returns}
         \label{fig:hop_mean}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.47\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{09-29-dag_hop_std}
+        \includegraphics[width=\textwidth]{09-22-dag_hop_std}
         \caption{Std of Returns}
         \label{fig:hop_std}
     \end{subfigure}
@@ -210,11 +220,12 @@ Figure \ref{fig:ant_dag} show the results on the ant environment with default hy
     \label{fig:hop_dag}
 \end{figure}
 
-We also tried doubling the network depth (Figure \ref{fig:hop_dag2}). And we increase to maximum return slightly faster, but achieve the same overall performance.
+We also tried doubling the network depth. And the average returns can be seen in Figure \ref{fig:hop_dag2}.
+Once again, the larger network does not seem to do any better.
 
 \begin{figure}[h] 
     \centering
-    \includegraphics[width=0.55 \linewidth]{09-29-dag_hop_all}
+    \includegraphics[width=0.55 \linewidth]{09-22-dag_hop_all}
     \caption{Comparison of dagger with defaout network size (grey) and double network depth (blue) in average return.}
     \label{fig:hop_dag2}
 \end{figure}
