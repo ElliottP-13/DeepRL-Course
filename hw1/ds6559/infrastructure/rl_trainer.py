@@ -113,6 +113,8 @@ class RL_Trainer(object):
 
         for itr in range(n_iter):
             print("\n\n********** Iteration %i ************"%itr)
+            if itr == 23:
+                print("Problem iter")
 
             # decide if videos should be rendered/logged at this iteration
             if itr % self.params['video_log_freq'] == 0 and self.params['video_log_freq'] != -1:
@@ -176,10 +178,10 @@ class RL_Trainer(object):
         # ``` return loaded_paths, 0, None ```
 
         # (2) collect `self.params['batch_size']` transitions
-        if itr == 0:
-            print("loading from expert ")
-            paths = pickle.load(open(load_initial_expertdata, 'rb'))
-            return paths, 0, None
+        # if itr == 0:
+        #     print("loading from expert ")
+        #     paths = pickle.load(open(load_initial_expertdata, 'rb'))
+        #     return paths, 0, None
 
         # HINT1: use sample_trajectories from utils
         # HINT2: you want each of these collected rollouts to be of length self.params['ep_len']
@@ -190,7 +192,7 @@ class RL_Trainer(object):
         # collect more rollouts with the same policy, to be saved as videos in tensorboard
         # note: here, we collect MAX_NVIDEO rollouts, each of length MAX_VIDEO_LEN
         train_video_paths = None
-        if self.log_video:
+        if self.logvideo:
             print('\nCollecting train rollouts to be used for saving videos...')
             train_video_paths = utils.sample_n_trajectories(self.env, collect_policy, MAX_NVIDEO, MAX_VIDEO_LEN, True)
 

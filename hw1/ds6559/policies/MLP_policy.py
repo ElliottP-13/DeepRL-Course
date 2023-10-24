@@ -94,13 +94,16 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         inp = torch.Tensor(observation, device=ptu.device)  # make tensor
         if self.discrete:
             outp = self.logits_na(inp)
+            outp = torch.softmax(outp, 1)  # apply softmax so they are probabilities
             distrib = distributions.Categorical(outp)
+            action = distrib.sample()
         else:
             outp_m = self.mean_net(inp)
             outp_std = self.logstd
             distrib = distributions.Normal(outp_m, torch.exp(outp_std))
+            action = distrib.rsample()
 
-        return distrib.rsample()
+        return action
 
     # update/train this policy
     def update(self, observations, actions, **kwargs):

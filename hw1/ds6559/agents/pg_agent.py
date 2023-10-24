@@ -71,19 +71,24 @@ class PGAgent(BaseAgent):
         # Note: q_values should be a 2D numpy array where the first
         # dimension corresponds to trajectories and the second corresponds
         # to timesteps
-        Q = np.zeros_like(rewards_list)  # init 2d Q mat, assumes rewards_list is square
+        """
+        So this note above is confusing, since everything else operates on the flattened list
+        So I am going to ignore that, and return a flattened Q 
+        """
+        Q = []  # init 2d Q mat, assumes rewards_list is square
 
         if not self.reward_to_go:
-            for i_traj in range(len(rewards_list)):
-                Q[i_traj] = self._discounted_return(rewards_list[i_traj])
+            for traj in rewards_list:
+                Q.append(self._discounted_return(traj))
 
         # Case 2: reward-to-go PG
         # Estimate Q^{pi}(s_t, a_t) by the discounted sum of rewards starting from t
         else:
-            for i_traj in range(len(rewards_list)):
-                Q[i_traj] = self._discounted_cumsum(rewards_list[i_traj])
+            for traj in rewards_list:
+                Q.append(self._discounted_cumsum(traj))
 
-        return Q
+        flat_q = [item for sublist in Q for item in sublist]
+        return np.array(flat_q)
 
     def estimate_advantage(self, obs: np.ndarray, rews_list: np.ndarray, q_values: np.ndarray, terminals: np.ndarray):
 
