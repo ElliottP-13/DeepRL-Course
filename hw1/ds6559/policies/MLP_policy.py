@@ -148,7 +148,14 @@ class MLPPolicyPG(MLPPolicy):
         # HINT2: you will want to use the `log_prob` method on the distribution returned
             # by the `forward` method
 
-        TODO
+        # policy gradient
+        out = self.forward(observations)
+        logp = out.log_prob(actions)
+        loss = -torch.mean(logp * advantages)
+
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
 
         if self.nn_baseline:
             ## TODO: update the neural network baseline using the q_values as
@@ -158,7 +165,21 @@ class MLPPolicyPG(MLPPolicy):
             ## Note: You will need to convert the targets into a tensor using
                 ## ptu.from_numpy before using it in the loss
 
-            TODO
+            # update value network
+            assert q_values is not None
+            m_q = np.mean(q_values)
+            s_q = np.std(q_values)
+            norm_q = (q_values - m_q) / s_q
+            q_values = ptu.from_numpy(norm_q)
+
+            # get our baseline estimate
+            v_out = self.baseline.forward(observations)
+
+            baseline_loss = self.baseline_loss(v_out, q_values)
+
+            self.baseline_optimizer.zero_grad()
+            baseline_loss.backward()
+            self.baseline_optimizer.step()
 
         train_log = {
             'Training Loss': ptu.to_numpy(loss),
