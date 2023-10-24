@@ -45,7 +45,7 @@ class RL_Trainer(object):
         #############
 
         # Make the gym environment
-        self.env = gym.make(self.params['env_name'])
+        self.env = gym.make(self.params['env_name'], render_mode='rgb_array')
         self.env.seed(seed)
 
         # Add noise wrapper
@@ -194,7 +194,7 @@ class RL_Trainer(object):
         train_video_paths = None
         if self.logvideo:
             print('\nCollecting train rollouts to be used for saving videos...')
-            train_video_paths = utils.sample_n_trajectories(self.env, collect_policy, MAX_NVIDEO, MAX_VIDEO_LEN, True)
+            train_video_paths = utils.sample_n_trajectories(self.env, collect_policy, range(MAX_NVIDEO), MAX_VIDEO_LEN, True)
 
         return paths, envsteps_this_batch, train_video_paths
 
@@ -225,7 +225,7 @@ class RL_Trainer(object):
         # save eval rollouts as videos in tensorboard event file
         if self.logvideo and train_video_paths != None:
             print('\nCollecting video rollouts eval')
-            eval_video_paths = utils.sample_n_trajectories(self.env, eval_policy, MAX_NVIDEO, MAX_VIDEO_LEN, True)
+            eval_video_paths = utils.sample_n_trajectories(self.env, eval_policy, range(MAX_NVIDEO), MAX_VIDEO_LEN, True)
 
             #save train/eval videos
             print('\nSaving train rollouts as videos...')
