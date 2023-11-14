@@ -202,3 +202,8 @@ class MLPPolicyPG(MLPPolicy):
         observations = ptu.from_numpy(observations)
         pred = self.baseline(observations)
         return ptu.to_numpy(pred.squeeze())
+
+class MLPPolicyAC(MLPPolicy):
+    def update(self, observations, actions, adv_n=None):
+        # TODO: update the policy and return the loss
+        return loss.item()

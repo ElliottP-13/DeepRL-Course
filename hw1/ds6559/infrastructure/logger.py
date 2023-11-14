@@ -32,6 +32,7 @@ class Logger:
         videos = [np.transpose(p['image_obs'].squeeze(1), [0, 3, 1, 2]) for p in paths]
         # videos = [np.transpose(p['image_obs'], [1, 0, 2, 3, 4]).squeeze(0) for p in paths]
         # videos = [p['image_obs'] for p in paths]
+        # videos = [np.transpose(p['image_obs'], [0, 3, 1, 2]) for p in paths]
 
         # max rollout length
         max_videos_to_save = np.min([max_videos_to_save, len(videos)])
