@@ -293,8 +293,11 @@ class RL_Trainer(object):
         ####################################
 
 
-    def collect_training_trajectories(self, itr, initial_expertdata, collect_policy, num_transitions_to_sample,
-                                      save_expert_data_to_disk=False):
+    def collect_training_trajectories(self,
+            itr,
+            load_initial_expertdata,
+            collect_policy,
+            batch_size,):
         """
         :param itr:
         :param load_initial_expertdata:  path to expert data pkl file
