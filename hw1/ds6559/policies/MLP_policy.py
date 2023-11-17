@@ -91,7 +91,7 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         else:
             observation = obs[None]
 
-        inp = torch.Tensor(observation, device=ptu.device)  # make tensor
+        inp = torch.tensor(observation, device=ptu.device)  # make tensor
         if self.discrete:
             outp = self.logits_na(inp)
             outp = torch.softmax(outp, 1)  # apply softmax so they are probabilities

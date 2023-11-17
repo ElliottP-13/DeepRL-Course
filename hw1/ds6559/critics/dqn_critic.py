@@ -76,7 +76,7 @@ class DQNCritic(BaseCritic):
             # and page 4 of https://arxiv.org/pdf/1509.06461.pdf is also a good reference.
             q_tp1_self = self.q_net(next_ob_no)
             _, idxs = q_tp1_self.max(dim=1)  # get best action according to current net
-            q_tp1 = qa_tp1_values[idxs]  # get q value according to target net
+            q_tp1 = torch.gather(qa_tp1_values, 1, idxs.view(-1, 1)).squeeze()  # get q value according to target net
         else:
             q_tp1, _ = qa_tp1_values.max(dim=1)
 
