@@ -1,6 +1,7 @@
 import numpy as np
 import time
 import copy
+import pytorch_util as ptu
 
 ############################################
 ############################################
@@ -75,7 +76,7 @@ def sample_trajectory(env, policy, max_path_length, render=False):
         obs.append(ob)
         ac = policy.get_action(ob)  # HINT: query the policy's get_action function
         if not isinstance(ac[0], np.ndarray):
-            ac = ac[0].detach().numpy()
+            ac = ptu.to_numpy(ac[0])
         else:
             ac = ac[0]
         acs.append(ac)
