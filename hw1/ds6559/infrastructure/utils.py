@@ -1,7 +1,7 @@
 import numpy as np
 import time
 import copy
-import pytorch_util as ptu
+import ds6559.infrastructure.pytorch_util as ptu
 
 ############################################
 ############################################
